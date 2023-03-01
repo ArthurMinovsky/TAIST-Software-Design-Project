@@ -10,7 +10,7 @@
    * Department Store Smart Parking System
 
 ## User stories and acceptance criteria
-1. As a **customer**, I want to **get a parking lost without driving around the parking lot** so that **I can save time**.
+1. As a **customer**, I want to **get a parking lots without driving around the parking lot** so that **I can save time**.
    * Scenario: **customer visit**, given **there is a parking space**, when **the car drive pass the gate**, then **gate open, and parking space number is assignd**. 
 2. As an **owner**, I want to **know if customer is acutually used the assigned space** so that **I can update the availability of the parking space**.
    * Scenario: **individual query**, given **user get into wrong spot**, when **the sensor detected the car**, then **the avaibility of the wrong spot is change to occupied and the previosely assign spot is now free**.
