@@ -25,9 +25,12 @@
 
 ## Software architecture
 ### System Structure:
-![Overall system](https://user-images.githubusercontent.com/126540644/223080883-f47f8a22-18d0-43c9-9193-b52eae110796.jpg)
-* For the hardware sequence diagram.
-* For the software sequence diagram.
+*Design overall system for Department Store Smart Parking.
+![Overall System](https://user-images.githubusercontent.com/126540644/223204760-86a943d7-bf67-4603-afd4-6a59f919b429.jpg)
+* The sequence, when customers come into the store parking.
+![Customer Sequence](https://user-images.githubusercontent.com/126540644/223205104-3406ccb1-c148-4132-89e2-daf10518be38.jpg)
+* The sequence, when the owner wants to access the data.
+![Owner Sequence](https://user-images.githubusercontent.com/126540644/223205325-608ffcdf-0561-419f-ae5c-59cdd54b173f.jpg)
 
 ### ESP32 tag:
 
