@@ -25,7 +25,7 @@
 
 ## Software architecture
 ### System Structure:
-*Design overall system for Department Store Smart Parking.
+* Design overall system for Department Store Smart Parking.
 ![Overall System](https://user-images.githubusercontent.com/126540644/223204760-86a943d7-bf67-4603-afd4-6a59f919b429.jpg)
 * The sequence, when customers come into the store parking.
 ![Customer Sequence](https://user-images.githubusercontent.com/126540644/223205104-3406ccb1-c148-4132-89e2-daf10518be38.jpg)
