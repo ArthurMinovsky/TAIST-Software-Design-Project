@@ -10,8 +10,8 @@
    * Department Store Smart Parking System
 
 ## User stories and acceptance criteria
-1. As a **customer**, I want to **get a parking stall without driving around the parking lot ** so that **I can save time and energy looking for one**.
-   * Scenario: **customer visits**, given **there is a parking stall**, when **the car pulls up in front of the gate**, then **the gate opens, and the parking stall number is assigned (Push Style)**.
+1. As a **customer**, I want to **get a parking stall without driving around the parking lot** so that **I can save time and energy looking for one**.
+   * Scenario: **customer visits**, given **there is a parking stall**, when **the car pulls up in front of the gate**, then **the parking stall number is assigned (Push Style), and the gate opens**.
    * Scenario: **customer visits**, given **there is NO parking stall**, when **the car pulls up in front of the gate, then there will be a sign saying ‘FULL’, and the gate will not open**.
 2. As an **owner**, I want to **see how many cars are in the parking lot ** so that **I can understand the current status**.
 	* Scenario: **Density**, given **RFID tags are assigned**, when **checked**, then **the percentage occupied is displayed**.
