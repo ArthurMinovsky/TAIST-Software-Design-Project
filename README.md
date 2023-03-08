@@ -1,4 +1,4 @@
-# TAIST Software Design Project Group : )
+# G4: Department Store Smart Parking System : )
 
 ## Objectives
 * Assemble harware component for controlling parking gate
