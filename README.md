@@ -16,7 +16,7 @@
 2. As an **owner**, I want to **see how many cars are in the parking lot** so that **I can understand the current status**.
 	* Scenario: **Density**, given **RFID tags are assigned**, when **checked**, then **the percentage occupied is displayed**.
 	* Scenario: **Income**, given **parked cars' activity**, when **checked**, then **the total income from the beginning of the months up to now and last month are reported**.
-3.As an **owner**, I want to **know historical data of how long and how many customers used the parking lot** so that **I can analyze the data for prediction**.
+2. As an **owner**, I want to **know historical data of how long and how many customers used the parking lot** so that **I can analyze the data for prediction**.
 	* Scenario: **Utilization**, given **the percentage of stall occupied is calculated**, when **the number is low**, **then the space can be allocated for other purposes**.
 
 ## Software architecture
