@@ -27,8 +27,12 @@
 ### System Structure:
 * Software system consists of three software stacks for detecting cars by IR sensor, parking ID collection data (ID, Status, Time), and Mobile UI to show the parking ID in LINE application.
 ![Overall](https://user-images.githubusercontent.com/126540644/223747932-6dab9cc6-b294-4c76-adab-e8be04fe6427.png)
-* The sequence, when customers come into the store parking.
-![Customer Sequence](https://user-images.githubusercontent.com/126540644/223205104-3406ccb1-c148-4132-89e2-daf10518be38.jpg)
+* The sequence to access the Mac Address of Customer.
+![Sequence 1](https://user-images.githubusercontent.com/126540644/223780041-dd91a8f1-43d2-4b0d-a072-fa7597b572a6.jpg)
+* The sequence, when customer come in store parking system.
+![Sequence 2](https://user-images.githubusercontent.com/126540644/223780460-c247bd78-e674-4200-99ff-71300c1725c3.jpg)
+And when customer come out.
+![Sequence 3](https://user-images.githubusercontent.com/126540644/223780699-d2758c63-581d-430a-8f73-7cb4527ddf0b.jpg)
 * The sequence, when the owner wants to access the data.
 ![Owner Sequence](https://user-images.githubusercontent.com/126540644/223205325-608ffcdf-0561-419f-ae5c-59cdd54b173f.jpg)
 
