@@ -3,21 +3,21 @@ from fastapi import FastAPI, Request, Response
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+import os
 
 app = FastAPI()
 
-# Replace with your LINE Channel Access Token and Channel Secret
-CHANNEL_ACCESS_TOKEN = "YOUR_CHANNEL_ACCESS_TOKEN"
-CHANNEL_SECRET = "YOUR_CHANNEL_SECRET"
+# Channel access token and channel secret
+line_bot_api = LineBotApi(os.environ.get('LINE_CHANNEL_ACCESS_TOKEN'))
+handler = WebhookHandler(os.environ.get('LINE_CHANNEL_SECRET'))
 
-line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(CHANNEL_SECRET)
+
 
 # Replace with your LIFF URL
 LIFF_URL = "YOUR_LIFF_URL"
 
 # Get massage from user with rich menu
-@app.post("/get massage")
+@app.get("/get massage")
 async def get_massage(request: Request, response: Response):
     signature = request.headers["X-Line-Signature"]
     body = await request.body()
@@ -28,15 +28,21 @@ async def get_massage(request: Request, response: Response):
         return "Invalid signature"
     return "OK"
 
-@app.post("/webhook")
-async def webhook(request: Request, response: Response):
-    signature = request.headers["X-Line-Signature"]
+# Reply massage to user
+@app.post("/line/webhook")
+async def line_webhook(request: Request, response: Response):
+    # Get request body and signature
     body = await request.body()
+    signature = request.headers['X-Line-Signature']
+
+    # Handle webhook event
     try:
-        handler.handle(body.decode(), signature)
+        handler.handle(body, signature)
     except InvalidSignatureError:
         response.status_code = 400
         return "Invalid signature"
+
+    # Return success response
     return "OK"
 
 
@@ -47,6 +53,18 @@ def handle_message(event: MessageEvent):
     if text == "liff":
         message = TextSendMessage(text=LIFF_URL)
         line_bot_api.reply_message(reply_token, message)
+
+# Handler for Line message event
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    message = TextSendMessage(text=event.message.text)
+    line_bot_api.reply_message(event.reply_token, message)
+
+# Endpoint for LIFF app
+@app.get("/liff")
+async def liff():
+    # Return LIFF app content
+    return {"message": "Hello, LIFF!"}
 
 
 if __name__ == "__main__":
