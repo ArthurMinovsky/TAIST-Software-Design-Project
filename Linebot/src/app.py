@@ -14,7 +14,7 @@ handler = WebhookHandler(os.environ.get('LINE_CHANNEL_SECRET'))
 
 
 # Replace with your LIFF URL
-LIFF_URL = "YOUR_LIFF_URL"
+LIFF_URL = "https://liff.line.me/1660815308-xpr8JBGb"
 
 # Get massage from user with rich menu
 @app.get("/get massage")
