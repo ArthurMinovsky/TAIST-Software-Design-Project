@@ -1,0 +1,488 @@
+[
+    {
+        "id": "987520039232462e",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "71462feb5d14709c",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "e5ce681ea13d00bb",
+        "type": "ui_tab",
+        "name": "MAIN",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "06ae8a5e82f1771e",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "e5ce681ea13d00bb",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "0a864a42b3d848da",
+        "type": "ui_group",
+        "name": "Group 2",
+        "tab": "e5ce681ea13d00bb",
+        "order": 2,
+        "disp": false,
+        "width": "4",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f3119ae9772dc66b",
+        "type": "ui_spacer",
+        "z": "987520039232462e",
+        "name": "spacer",
+        "group": "06ae8a5e82f1771e",
+        "order": 2,
+        "width": "6",
+        "height": "4"
+    },
+    {
+        "id": "842254eeac68bd9b",
+        "type": "ui_group",
+        "name": "Group 3",
+        "tab": "e5ce681ea13d00bb",
+        "order": 3,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6612820a98152088",
+        "type": "ui_text",
+        "z": "987520039232462e",
+        "group": "06ae8a5e82f1771e",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 290,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "0cddb1be90b990d0",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "FULL",
+        "payloadType": "str",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "6612820a98152088"
+            ]
+        ]
+    },
+    {
+        "id": "2e247802688b748d",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "AVAILABLE ",
+        "payloadType": "str",
+        "x": 110,
+        "y": 140,
+        "wires": [
+            [
+                "6612820a98152088"
+            ]
+        ]
+    },
+    {
+        "id": "aba19c595a1ad60c",
+        "type": "ui_chart",
+        "z": "987520039232462e",
+        "name": "",
+        "group": "0a864a42b3d848da",
+        "order": 2,
+        "width": "4",
+        "height": "5",
+        "label": "Income",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 440,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "25ab2b939c6fb3c8",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "X1",
+        "payload": "100",
+        "payloadType": "str",
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "aba19c595a1ad60c"
+            ]
+        ]
+    },
+    {
+        "id": "84c6106c9c280958",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "X2",
+        "payload": "200",
+        "payloadType": "str",
+        "x": 120,
+        "y": 300,
+        "wires": [
+            [
+                "aba19c595a1ad60c"
+            ]
+        ]
+    },
+    {
+        "id": "e36c2857d37b6aad",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "A",
+        "payload": "100",
+        "payloadType": "str",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "d00b98b3ee427439"
+            ]
+        ]
+    },
+    {
+        "id": "1710ab8084f146cc",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "B",
+        "payload": "20",
+        "payloadType": "str",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            [
+                "d00b98b3ee427439"
+            ]
+        ]
+    },
+    {
+        "id": "50608dcf35840368",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "C",
+        "payload": "45",
+        "payloadType": "str",
+        "x": 110,
+        "y": 500,
+        "wires": [
+            [
+                "d00b98b3ee427439"
+            ]
+        ]
+    },
+    {
+        "id": "fd8fb7b4a0bd8f14",
+        "type": "inject",
+        "z": "987520039232462e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "D",
+        "payload": "68",
+        "payloadType": "str",
+        "x": 110,
+        "y": 560,
+        "wires": [
+            [
+                "d00b98b3ee427439"
+            ]
+        ]
+    },
+    {
+        "id": "d00b98b3ee427439",
+        "type": "ui_chart",
+        "z": "987520039232462e",
+        "name": "",
+        "group": "842254eeac68bd9b",
+        "order": 3,
+        "width": "12",
+        "height": "5",
+        "label": "Utilization",
+        "chartType": "horizontalBar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 440,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    }
+]
