@@ -3,6 +3,7 @@ from fastapi.encoders import jsonable_encoder
 import datetime
 import pymongo
 import math
+import pandas as pd
 
 from pymongo import MongoClient
 from dotenv import dotenv_values
@@ -16,6 +17,10 @@ app = FastAPI()
 mongodb_client = MongoClient(config["ATLAS_URI"])
 db = mongodb_client[config["CAR_PARKING_DB"]]
 
+def check_full_parking():
+    # return true if parking is full
+    empty_parking_count = db[config["PARKING"]].find({"stall_status":0}).count()
+    return empty_parking_count == 0
 
 def calculate_fee(time_in:str,time_out:str):
     time_in = time_in[11:]
@@ -134,6 +139,25 @@ def car_out(car_out: Car_out):
             {"stall_id":stall_id},
             {"$set":parking_update_data})
         return {"message": f"Car : {car_out} removed from {stall_id}"}
+
+@app.get("/monthly_total_fee")
+def get_total_fee():
+    car_out = db[config["CAR_OUT"]]
+    car_out_data = [i for i in car_out.find()]
+    car_out_df = pd.DataFrame(car_out_data)
+    car_out_df["time_out"] = pd.to_datetime(car_out_df["time_out"])
+    car_out_df["month"] = car_out_df["time_out"].dt.month
+    monthly_fee_df = car_out_df[['month','fee']].groupby('month').sum()
+    return monthly_fee_df.to_dict()
+
+@app.get("/get_latest_fee/{car_id}")
+def get_latest_fee(car_id):
+    car_out = db[config["CAR_OUT"]]
+    sorted_car_out = car_out.find({"car_id":car_id}).sort("time_out",-1)
+    latest_data = list(sorted_car_out)[0]
+    fee = latest_data["fee"]
+    return {"car_id":car_id,"fee":fee}
+
 
 
 @app.on_event("shutdown")
