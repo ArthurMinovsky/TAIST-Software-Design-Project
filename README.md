@@ -57,5 +57,6 @@ And when customer come out.
 ### Firmware development
 
 ### LINE bot development
+domain for webhook: parkbot.online
 
 ### LIFF UI development
