@@ -27,3 +27,5 @@ def shutdown_db_client():
     app.mongodb_client.close()
 
 app.include_router(router)
+
+# uvicorn api.main:app --reload --port 8000
