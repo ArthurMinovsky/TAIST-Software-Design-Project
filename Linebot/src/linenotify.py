@@ -12,7 +12,7 @@ def route(num_car):
     if num_car == "0":
         msg = 'Your Stall ID is A'
     if num_car == "1":
-        msg = 'Your sStall ID is B'
+        msg = 'Your Stall ID is B'
     if num_car == "2":
         msg = 'Your Stall ID is C'
     if num_car == "3":
