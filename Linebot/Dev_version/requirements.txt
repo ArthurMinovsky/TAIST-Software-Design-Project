@@ -1,0 +1,7 @@
+paho-mqtt
+pymongo
+python-dotenv
+fastapi
+line-bot-sdk
+pyngrok
+python-dotenv
