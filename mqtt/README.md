@@ -9,4 +9,4 @@ The hardware part
 
 2.Adafruit PN532 RFID/NFC Breakout and Shield 
 
-for more detail visit https://github.com/anrina/RfidParkingSystem 
+for more detail visit https://github.com/anrina/RfidParkingSystem (Hardware funny lab of this pro)
