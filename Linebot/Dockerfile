@@ -4,5 +4,5 @@ WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY . .
-EXPOSE 8000
-CMD ["python","-u", "./Linebot/src/app.py", "./Linebot/src/linenotify.py"]
+EXPOSE 8888
+CMD ["uvicorn", "src.linenotify:app", "--host", "0.0.0.0"]
