@@ -30,11 +30,11 @@ void setup() {
   button_state2 = digitalRead(BUTTON_PIN_2);
 }
 
-void buttonWait(int buttonPin){
-  int buttonState = 0;
+void buttonWait1(int buttonPin1){
+  int buttonState1 = 0;
   while(1){
-    buttonState = digitalRead(buttonPin);
-    if (buttonState == LOW) {
+    buttonState1 = digitalRead(buttonPin1);
+    if (buttonState1 == LOW) {
       return;
     }
   }
@@ -42,7 +42,7 @@ void buttonWait(int buttonPin){
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  button_state1 = HIGH;	
   last_button_state = button_state1;
   button_state1 = digitalRead(BUTTON_PIN_1);
 
@@ -56,38 +56,43 @@ void loop() {
     
     if (led_state == 1){
 
-      //CODE RFID for carOUT//
+      //CODE RFID//
+      delay(1000);
       
       digitalWrite(LED_R_1, LOW);
       digitalWrite(LED_Y_1, HIGH);
       digitalWrite(LED_G_1, LOW);
       delay(1000);
-      last_button_state2 = button_state2;
-      button_state2 = digitalRead(BUTTON_PIN_2);
-      Serial.println(button_state2);
-      buttonWait(27);
-      if (button_state2 == HIGH){
-        digitalWrite(LED_R_1, LOW);
-  	digitalWrite(LED_Y_1, LOW);
-	digitalWrite(LED_G_1, HIGH);
-        delay(2000);
-      }       
-    }
-    else{
-      buttonWait(27); 
-      digitalWrite(LED_R_1, LOW);
-      digitalWrite(LED_Y_1, HIGH);
-      digitalWrite(LED_G_1, LOW);     
-
-      //RFID For car in//
-
-      buttonWait(27);      
+      buttonWait1(27);
       digitalWrite(LED_R_1, LOW);
       digitalWrite(LED_Y_1, LOW);
-      digitalWrite(LED_G_1, HIGH);  
-      delay(5000);
+      digitalWrite(LED_G_1, HIGH);
+      delay(2000);   
+      digitalWrite(LED_R_1, HIGH);
+      digitalWrite(LED_Y_1, LOW);
+      digitalWrite(LED_G_1, LOW);
+      led_state = 0;  
+      digitalWrite(LED_PIN, led_state);     
     }
   }
+  else if(last_button_state == HIGH && button_state1 == HIGH){
+    if(led_state == 0){
+    button_state2 = digitalRead(BUTTON_PIN_2);
+      if (button_state2 == LOW){
+        digitalWrite(LED_R_1, LOW);
+	digitalWrite(LED_Y_1, HIGH);
+	digitalWrite(LED_G_1, LOW);     
+        delay(2000);
+      
+        //RFID pub complete//
+      
+        digitalWrite(LED_R_1, LOW);
+	digitalWrite(LED_Y_1, LOW);
+	digitalWrite(LED_G_1, HIGH);  
+        delay(2000); 
+      }
+    }
+  } 
   digitalWrite(LED_R_1, HIGH);
   digitalWrite(LED_Y_1, LOW);
   digitalWrite(LED_G_1, LOW);  
