@@ -5,9 +5,9 @@ import pymongo
 import math
 import pandas as pd
 import requests
-
+import os
 from pymongo import MongoClient
-from dotenv import dotenv_values
+from pyngrok import ngrok
 
 from .models import  Car_in, Car_out
 
@@ -17,12 +17,11 @@ line_url = 'https://notify-api.line.me/api/notify'
 line_token = '3D9MHq4Sps9Tu4yoFdZTYy7SY2p6h7MEnVcZCUuJlHk'
 line_headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+line_token}
 
-config = dotenv_values(".env")
-
 app = FastAPI()
 
-mongodb_client = MongoClient(config["ATLAS_URI"])
-db = mongodb_client[config["CAR_PARKING_DB"]]
+
+mongodb_client = MongoClient(os.environ["ATLAS_URI"])
+db = mongodb_client[os.environ["CAR_PARKING_DB"]]
 
 def calculate_fee(time_in:str,time_out:str):
     time_in = time_in[11:]
@@ -42,7 +41,11 @@ def calculate_fee(time_in:str,time_out:str):
 @app.on_event("startup")
 def startup_db_client():
     print("Connected to the MongoDB database!")
-    
+
+    ngrok.set_auth_token(os.environ['NGROK_TOKEN'])
+    public_url = ngrok.connect(8000)
+    url = public_url.public_url.replace('http', 'https') + '/callback'
+    print(url)
     dblist = mongodb_client.list_database_names()
     if "parking_db" in dblist:
         print("The database exists.")
@@ -50,9 +53,9 @@ def startup_db_client():
         print("The database does not exist.")
         print("The database and collections is now being created...")
         db = mongodb_client["parking_db"]
-        car_in = db[config['CAR_IN']]
-        car_out = db[config['CAR_OUT']]
-        parking = db[config['PARKING']]
+        car_in = db[os.environ['CAR_IN']]
+        car_out = db[os.environ['CAR_OUT']]
+        parking = db[os.environ['PARKING']]
         parking_list = ["A","B","C","D"]
         for i in parking_list:
             parking.insert_one(
@@ -61,7 +64,9 @@ def startup_db_client():
                     "stall_status":0,
                     "car_id":None}
                 )
-    print("The database and collections have been created.")
+        print("The database and collections have been created.")
+    
+
 
 @app.get("/")
 async def root():
@@ -69,7 +74,7 @@ async def root():
 
 @app.get("/parking")
 async def get_parking_status():
-    parking_data = db[config["PARKING"]].find()
+    parking_data = db[os.environ["PARKING"]].find()
     parking_data = [i for i in parking_data]
     parking_dict = {i["stall_id"]:{i["stall_status"],
                                    i["car_id"]} 
@@ -78,14 +83,14 @@ async def get_parking_status():
 
 @app.get("/get_car_in")
 async def get_car_in():
-    car_in_data = db[config["CAR_IN"]].find()
+    car_in_data = db[os.environ["CAR_IN"]].find()
     car_in_data = [i for i in car_in_data]
     car_in_dict = {i["car_id"]:i["time_in"] for i in car_in_data}
     return car_in_dict
 
 @app.get("/get_car_out")
 async def get_car_out():
-    car_out_data = db[config["CAR_OUT"]].find()
+    car_out_data = db[os.environ["CAR_OUT"]].find()
     car_out_data = [i for i in car_out_data]
     car_out_dict = {i["car_id"]:{i["time_out"],
                                 i["fee"],
@@ -99,15 +104,15 @@ def car_in(car_in: Car_in):
     # get current time as YYYY-MM-DD HH:MM:SS
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # check if parking is full
-    if not db[config["PARKING"]].find_one({"stall_status":0}):
+    if not db[os.environ["PARKING"]].find_one({"stall_status":0}):
 
         message = "Parking is full"
         requests.post(line_url, headers=line_headers, data = {'message':message})
         
         raise HTTPException(status_code=400, detail="Parking is full")
 
-    elif not db[config["PARKING"]].find_one({"car_id":car_in["car_id"]}):
-        assign_parking = db[config["PARKING"]].find_one({"stall_status":0})
+    elif not db[os.environ["PARKING"]].find_one({"car_id":car_in["car_id"]}):
+        assign_parking = db[os.environ["PARKING"]].find_one({"stall_status":0})
         car_in_insert_data = { 
             "time_in":current_time,
             "stall_id":assign_parking["stall_id"],
@@ -117,8 +122,8 @@ def car_in(car_in: Car_in):
             "stall_status":1,
             "car_id":car_in["car_id"]
             }
-        db[config["CAR_IN"]].insert_one(car_in_insert_data)
-        db[config["PARKING"]].update_one(
+        db[os.environ["CAR_IN"]].insert_one(car_in_insert_data)
+        db[os.environ["PARKING"]].update_one(
             {"stall_id":assign_parking["stall_id"]},
             {"$set":parking_update_data})
         message = f"Car : {car_in} inserted into {assign_parking['stall_id']}"
@@ -137,12 +142,12 @@ def car_out(car_out: Car_out):
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # check if car is in the parking
     print(car_out["car_id"])
-    print(db[config["PARKING"]].find_one({"car_id":car_out["car_id"]}))
-    if not db[config["PARKING"]].find_one({"car_id":car_out["car_id"]}):
+    print(db[os.environ["PARKING"]].find_one({"car_id":car_out["car_id"]}))
+    if not db[os.environ["PARKING"]].find_one({"car_id":car_out["car_id"]}):
         raise HTTPException(status_code=400, detail="Car not in the parking")
     else:
         # get the stall id
-        car_in_data = db[config["CAR_IN"]].find_one({"car_id":car_out["car_id"]})
+        car_in_data = db[os.environ["CAR_IN"]].find_one({"car_id":car_out["car_id"]})
         time_in = car_in_data["time_in"]
         time_out = current_time
 
@@ -161,8 +166,8 @@ def car_out(car_out: Car_out):
             "stall_status":0,
             "car_id":None
             }
-        db[config["CAR_OUT"]].insert_one(car_out_insert_data)
-        db[config["PARKING"]].update_one(
+        db[os.environ["CAR_OUT"]].insert_one(car_out_insert_data)
+        db[os.environ["PARKING"]].update_one(
             {"stall_id":stall_id},
             {"$set":parking_update_data})
         
@@ -172,17 +177,21 @@ def car_out(car_out: Car_out):
 
 @app.get("/monthly_total_fee")
 def get_total_fee():
-    car_out = db[config["CAR_OUT"]]
-    car_out_data = [i for i in car_out.find()]
-    car_out_df = pd.DataFrame(car_out_data)
-    car_out_df["time_out"] = pd.to_datetime(car_out_df["time_out"])
-    car_out_df["month"] = car_out_df["time_out"].dt.month
-    monthly_fee_df = car_out_df[['month','fee']].groupby('month').sum()
-    return monthly_fee_df.to_dict()
+    
+    try :
+        car_out = db[os.environ["CAR_OUT"]]
+        car_out_data = [i for i in car_out.find()]
+        car_out_df = pd.DataFrame(car_out_data)
+        car_out_df["time_out"] = pd.to_datetime(car_out_df["time_out"])
+        car_out_df["month"] = car_out_df["time_out"].dt.month
+        monthly_fee_df = car_out_df[['month','fee']].groupby('month').sum()
+        return monthly_fee_df.to_dict()
+    except:
+        return { "error" : "No data"}
 
 @app.get("/get_latest_fee/{car_id}")
 def get_latest_fee(car_id):
-    car_out = db[config["CAR_OUT"]]
+    car_out = db[os.environ["CAR_OUT"]]
     sorted_car_out = car_out.find({"car_id":car_id}).sort("time_out",-1)
     latest_data = list(sorted_car_out)[0]
     fee = latest_data["fee"]
@@ -190,7 +199,7 @@ def get_latest_fee(car_id):
 
 # @app.get("/welcome_car/{car_id}")
 # def get_stall_from_car(car_id):
-#     parking_of_car = db[config["PARKING"]].find_one({"car_id":car_id})
+#     parking_of_car = db[os.environ["PARKING"]].find_one({"car_id":car_id})
 #     if parking_of_car:
 #         message = f"Car {car_id} is in stall {parking_of_car['stall_id']}"
 #         requests.post(line_url,headers=line_headers,data={"message":message})
@@ -200,10 +209,22 @@ def get_latest_fee(car_id):
 
 @app.get("/welcome_car/{car_id}")
 def check_full_parking():
-    empty_parking_count = db[config["PARKING"]]\
+    empty_parking_count = db[os.environ["PARKING"]]\
         .find({"stall_status":0})\
         .count()
     return empty_parking_count == 0
+
+@app.get("/get_parking_status")
+def get_parking_status():
+    empty_parking_count = db[os.environ["PARKING"]]\
+        .find({"stall_status":0})\
+        .count()
+    used_parking_count = db[os.environ["PARKING"]]\
+        .find({"stall_status":1})\
+        .count()
+    return {"empty_parking_count":empty_parking_count,
+            "used_parking_count":used_parking_count}
+
 
 
 @app.on_event("shutdown")
