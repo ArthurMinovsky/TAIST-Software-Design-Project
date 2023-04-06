@@ -11,7 +11,7 @@ class Parking_Update(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "Stall_ID": "A1",
+                "Stall_ID": "A",
                 "Time": "2021-05-01 12:00:00",
                 "Status": "Available",
             }
