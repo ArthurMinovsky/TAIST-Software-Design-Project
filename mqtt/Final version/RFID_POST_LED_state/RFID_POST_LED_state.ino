@@ -24,8 +24,8 @@ const char* ssid = "Xysis";//WIFI SSID
 const char* password = "enable111";//WIFI password
 
 //Your Domain name with URL path or IP address with path
-const char* serverName1 = "http://dc5d-124-122-218-230.ngrok.io/api/inject_logging";// API link car_out
-const char* serverName2 = "http://dc5d-124-122-218-230.ngrok.io/api/inject_logging";// API link car_out
+const char* serverName1 = "http://329f-1-47-130-233.ngrok.io/add_car_in";// API link car_out
+const char* serverName2 = "http://329f-1-47-130-233.ngrok.io/add_car_out";// API link car_in
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
 unsigned long lastTime = 0;
