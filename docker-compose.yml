@@ -1,0 +1,46 @@
+# ref: https://docs.docker.com/compose/compose-file/ 
+version: '3.8'
+services: 
+  api:
+    container_name: api
+    build:
+      context: ./api
+    ports:
+      - "8000:8000"
+    volumes: 
+        - ./api:/workspace
+    command:  uvicorn main:app --reload --host 0.0.0.0
+    env_file: 
+        - .env
+    depends_on:
+    - mongo_db
+  node_red:
+    container_name: node_red
+    image: nodered/node-red
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node_red:/data
+  mongo_db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+  linenotify:
+    container_name: linenotify
+    build: ./Linebot
+    ports:
+      - "8888:8888"
+    env_file:
+      - .env
+  dashboard:
+    container_name: dashboard
+    build:
+      context: ./dashboard
+    ports:
+      - "8501:8501"
+    volumes: 
+      - ./DashboardNR.json:/data/flows.json
+    env_file: 
+      - .env
+    restart: always

@@ -4,11 +4,18 @@ import datetime
 import pymongo
 import math
 import pandas as pd
+import requests
 
 from pymongo import MongoClient
 from dotenv import dotenv_values
 
-from models import  Car_in, Car_out
+from .models import  Car_in, Car_out
+
+RFID_TO_CAR_ID = {}
+
+line_url = 'https://notify-api.line.me/api/notify'
+line_token = '3D9MHq4Sps9Tu4yoFdZTYy7SY2p6h7MEnVcZCUuJlHk'
+line_headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+line_token}
 
 config = dotenv_values(".env")
 
@@ -16,11 +23,6 @@ app = FastAPI()
 
 mongodb_client = MongoClient(config["ATLAS_URI"])
 db = mongodb_client[config["CAR_PARKING_DB"]]
-
-def check_full_parking():
-    # return true if parking is full
-    empty_parking_count = db[config["PARKING"]].find({"stall_status":0}).count()
-    return empty_parking_count == 0
 
 def calculate_fee(time_in:str,time_out:str):
     time_in = time_in[11:]
@@ -94,14 +96,20 @@ async def get_car_out():
 @app.post("/add_car_in", response_description="Car in")
 def car_in(car_in: Car_in):
     car_in = jsonable_encoder(car_in)
+    # get current time as YYYY-MM-DD HH:MM:SS
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # check if parking is full
     if not db[config["PARKING"]].find_one({"stall_status":0}):
+
+        message = "Parking is full"
+        requests.post(line_url, headers=line_headers, data = {'message':message})
+        
         raise HTTPException(status_code=400, detail="Parking is full")
 
     elif not db[config["PARKING"]].find_one({"car_id":car_in["car_id"]}):
         assign_parking = db[config["PARKING"]].find_one({"stall_status":0})
         car_in_insert_data = { 
-            "time_in":car_in["time_in"],
+            "time_in":current_time,
             "stall_id":assign_parking["stall_id"],
             "car_id":car_in["car_id"]
             }
@@ -113,7 +121,10 @@ def car_in(car_in: Car_in):
         db[config["PARKING"]].update_one(
             {"stall_id":assign_parking["stall_id"]},
             {"$set":parking_update_data})
+        message = f"Car : {car_in} inserted into {assign_parking['stall_id']}"
         
+        requests.post(line_url, headers=line_headers, data = {'message':message})
+
         return {"message": f"Car : {car_in} inserted into {assign_parking['stall_id']}"}
     
     else :
@@ -123,6 +134,7 @@ def car_in(car_in: Car_in):
 @app.post("/add_car_out", response_description="Car out")
 def car_out(car_out: Car_out):
     car_out = jsonable_encoder(car_out)
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # check if car is in the parking
     print(car_out["car_id"])
     print(db[config["PARKING"]].find_one({"car_id":car_out["car_id"]}))
@@ -132,7 +144,7 @@ def car_out(car_out: Car_out):
         # get the stall id
         car_in_data = db[config["CAR_IN"]].find_one({"car_id":car_out["car_id"]})
         time_in = car_in_data["time_in"]
-        time_out = car_out["time_out"]
+        time_out = current_time
 
         fee = calculate_fee(time_in,time_out)
 
@@ -140,7 +152,7 @@ def car_out(car_out: Car_out):
         car_out_insert_data = {
             "car_id":car_out["car_id"],
             "time_in":car_in_data["time_in"],
-            "time_out":car_out["time_out"],
+            "time_out":current_time,
             
             "stall_id":stall_id,
             "fee":fee
@@ -153,6 +165,9 @@ def car_out(car_out: Car_out):
         db[config["PARKING"]].update_one(
             {"stall_id":stall_id},
             {"$set":parking_update_data})
+        
+        message = f"Car : {car_out} removed from {stall_id} | fee : {fee}"
+        requests.post(line_url, headers=line_headers, data = {'message':message})
         return {"message": f"Car : {car_out} removed from {stall_id}"}
 
 @app.get("/monthly_total_fee")
@@ -173,6 +188,22 @@ def get_latest_fee(car_id):
     fee = latest_data["fee"]
     return {"car_id":car_id,"fee":fee}
 
+# @app.get("/welcome_car/{car_id}")
+# def get_stall_from_car(car_id):
+#     parking_of_car = db[config["PARKING"]].find_one({"car_id":car_id})
+#     if parking_of_car:
+#         message = f"Car {car_id} is in stall {parking_of_car['stall_id']}"
+#         requests.post(line_url,headers=line_headers,data={"message":message})
+#         return {"car_id":car_id,"stall_id":parking_of_car["stall_id"]}
+#     else:
+#         raise HTTPException(status_code=400, detail="Car not in the parking")
+
+@app.get("/welcome_car/{car_id}")
+def check_full_parking():
+    empty_parking_count = db[config["PARKING"]]\
+        .find({"stall_status":0})\
+        .count()
+    return empty_parking_count == 0
 
 
 @app.on_event("shutdown")

@@ -1,4 +1,3 @@
-from typing import Optional
 from fastapi import FastAPI, Request, Response
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
