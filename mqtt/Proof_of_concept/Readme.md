@@ -1,1 +1,0 @@
-The proof of concept is proof that Flask api that open from local port by ngrok that collect data to mongoDB can connect with ESP32 core that we use by http POST. 
