@@ -1,10 +1,11 @@
 import requests
-import fastapi
+from fastapi import Fastapi
 
 url = 'https://notify-api.line.me/api/notify'
 token = '3D9MHq4Sps9Tu4yoFdZTYy7SY2p6h7MEnVcZCUuJlHk'
 headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
 
+app = Fastapi()
 
 @app.get("/api/route")
 def route(num_car):
