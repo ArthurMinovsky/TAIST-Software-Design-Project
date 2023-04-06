@@ -25,11 +25,9 @@ def check_full_parking():
 def calculate_fee(time_in:str,time_out:str):
     time_in = time_in[11:]
     time_out = time_out[11:]
-    print(time_in,time_out)
     time_in = datetime.datetime.strptime(time_in, '%H:%M:%S').time()
     time_out = datetime.datetime.strptime(time_out, '%H:%M:%S').time()
     time_diff = (datetime.datetime.combine(datetime.date.today(), time_out) - datetime.datetime.combine(datetime.date.today(), time_in))
-    print(time_diff)
     hour = time_diff.total_seconds() / 3600
     if hour <= 0.25:
         fee = 0
@@ -42,8 +40,26 @@ def calculate_fee(time_in:str,time_out:str):
 @app.on_event("startup")
 def startup_db_client():
     print("Connected to the MongoDB database!")
-    print(f"link: {config['ATLAS_URI']}")
-    print(db.list_collection_names())
+    
+    dblist = mongodb_client.list_database_names()
+    if "parking_db" in dblist:
+        print("The database exists.")
+    else:
+        print("The database does not exist.")
+        print("The database and collections is now being created...")
+        db = mongodb_client["parking_db"]
+        car_in = db[config['CAR_IN']]
+        car_out = db[config['CAR_OUT']]
+        parking = db[config['PARKING']]
+        parking_list = ["A","B","C","D"]
+        for i in parking_list:
+            parking.insert_one(
+                {
+                    "stall_id":i,
+                    "stall_status":0,
+                    "car_id":None}
+                )
+    print("The database and collections have been created.")
 
 @app.get("/")
 async def root():
@@ -121,7 +137,6 @@ def car_out(car_out: Car_out):
         fee = calculate_fee(time_in,time_out)
 
         stall_id = car_in_data["stall_id"]
-        print(stall_id)
         car_out_insert_data = {
             "car_id":car_out["car_id"],
             "time_in":car_in_data["time_in"],
