@@ -2,38 +2,41 @@
 version: '3.8'
 services: 
   api:
-    container_name: api
+    container_name: api_parking
     build:
       context: ./api
     ports:
       - "8000:8000"
     volumes: 
         - ./api:/workspace
-    command:  uvicorn main:app --reload --host 0.0.0.0
     env_file: 
         - .env
     depends_on:
     - mongo_db
     restart: always
-  node_red:
-    container_name: node_red
-    image: nodered/node-red
-    ports:
-      - "1880:1880"
-    volumes:
-      - ./node_red:/data
-      - ./DashboardNR.json:/data/flows.json
-    restart: always
+
   mongo_db:
+    container_name: parking_mongo
     image: mongo
-    ports:
-      - "27017:27017"
+    # ports:
+    #   - "27017:27017"
     restart: always
-  linenotify:
-    container_name: linenotify
-    build: ./Linebot
-    ports:
-      - "8888:8888"
-    env_file:
-      - .env
-    restart: always
+  # node_red:
+  #   container_name: node_red
+  #   image: nodered/node-red
+  #   ports:
+  #     - "1880:1880"
+  #   volumes:
+  #     - ./node_red:/data
+  #     - ./dashboard/:/data/
+  #   command: 
+  #     - echo "node-red-dashboard"
+  #   restart: always
+  # linenotify:
+  #   container_name: linenotify
+  #   build: ./Linebot
+  #   ports:
+  #     - "8888:8888"
+  #   env_file:
+  #     - .env
+  #   restart: always
