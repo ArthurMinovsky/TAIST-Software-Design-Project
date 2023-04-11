@@ -2,7 +2,7 @@ import requests
 from fastapi import FastAPI
 
 url = 'https://notify-api.line.me/api/notify'
-token = '3D9MHq4Sps9Tu4yoFdZTYy7SY2p6h7MEnVcZCUuJlHk'
+token = '<API-Token>'
 headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
 
 app = FastAPI()
